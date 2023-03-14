@@ -20,8 +20,7 @@ jobs:
       
       - run: echo "${GITHUB_REF#refs/tags/v}"
       - run: |
-          TAG=${ GITHUB_REF#refs/tags/ }
-          echo "CURRENT_VERSION=${TAG#v}" >> $GITHUB_ENV
+          echo "CURRENT_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
       - name: Debug
         run: |
           cat $GITHUB_ENV
