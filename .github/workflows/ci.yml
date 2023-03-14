@@ -1,0 +1,30 @@
+name: docker static website
+on:
+  push:
+    # tags:
+    #   - v*
+    branches:
+      - master
+
+jobs:
+  get-static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build docker-static-website image
+        run: docker build -t docker-static-website .
+
+      - name: Tags & Push docker-static-website
+        run: |
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          docker tag docker-static-website ${{ secrets.DOCKER_USER }}/docker-static-website:$VERSION
+          docker tag docker-static-website ${{ secrets.DOCKER_USER }}/docker-static-website:latest
+          docker push ${{ secrets.DOCKER_USER }}/docker-static-website:$VERSION
+          docker push ${{ secrets.DOCKER_USER }}/docker-static-website:latest
