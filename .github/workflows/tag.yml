@@ -16,7 +16,8 @@ jobs:
         with:
           filter-author: (小弟调调™)
           filter: (^[\s]+?[R|r]elease)|(^[R|r]elease)
-
+      - run: echo "${{ secrets.GITHUB_REF }}"
+      - run: echo "${{ secrets.DOCKER_USER }}"
       # Create Docker Image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -32,4 +33,4 @@ jobs:
           push: true
           context: .
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKER_USER }}/docker-static-website:${{ env.GITHUB_REF }}
+          tags: ${{ secrets.DOCKER_USER }}/docker-static-website:${{ secrets.GITHUB_REF }}
