@@ -4,6 +4,9 @@ on:
     tags:
       - v*
 
+env:
+  GITHUB_REF_PATH: ${{ env.GITHUB_REF#refs/tags/ }}
+
 jobs:
   create-docker-image:
     runs-on: ubuntu-latest
@@ -30,13 +33,13 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push image:tags
-        uses: docker/build-push-action@v3
-        env:
-          GITHUB_REF_PATH: ${{ env.GITHUB_REF#refs/tags/ }}
-        with:
-          push: true
-          context: .
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            wcjiang/docker-static-website:${{ env.GITHUB_REF_PATH }}
+      # - name: Build and push image:tags
+      #   uses: docker/build-push-action@v3
+      #   env:
+      #     GITHUB_REF_PATH: ${{ env.GITHUB_REF#refs/tags/ }}
+      #   with:
+      #     push: true
+      #     context: .
+      #     platforms: linux/amd64,linux/arm64
+      #     tags: |
+      #       wcjiang/docker-static-website:${{ env.GITHUB_REF_PATH }}
