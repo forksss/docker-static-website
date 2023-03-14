@@ -21,13 +21,12 @@ jobs:
       - run: echo "${GITHUB_REF#refs/tags/v}"
       - run: |
           TAG=${{ github.event.release.tag_name }}
-          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
-          echo "${{env.VERSION}}"
+          echo "CURRENT_VERSION=${TAG#v}" >> $GITHUB_ENV
       - name: Debug
         run: |
           cat $GITHUB_ENV
   
-      - run: echo "${{env.VERSION}}"
+      - run: echo "${{env.CURRENT_VERSION}}"
       # Create Docker Image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -44,4 +43,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           tags: |
-            wcjiang/docker-static-website:${{ env.VERSION }}
+            wcjiang/docker-static-website:${{ env.CURRENT_VERSION }}
