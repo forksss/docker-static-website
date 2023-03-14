@@ -17,7 +17,7 @@ jobs:
           filter-author: (小弟调调™)
           filter: (^[\s]+?[R|r]elease)|(^[R|r]elease)
 
-      - run: echo "${{ github.ref_name#v* }}"
+      - run: echo "${{ github.ref_name/v/\"\" }}"
 
       # Create Docker Image
       - name: Set up Docker Buildx
@@ -35,5 +35,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           tags: |
-            wcjiang/docker-static-website:${{ github.ref_name#v }}
+            wcjiang/docker-static-website:${{ github.ref_name/v/\"\" }}
             wcjiang/docker-static-website:latest
