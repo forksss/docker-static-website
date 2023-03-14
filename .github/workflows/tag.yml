@@ -19,8 +19,6 @@ jobs:
           filter: (^[\s]+?[R|r]elease)|(^[R|r]elease)
       
       - run: echo "${GITHUB_REF#refs/tags/v}"
-        env:
-          GITHUB_REF_PATH: ${{ env.GITHUB_REF#refs/tags/ }}
       - run: |
           TAG=${{ github.event.release.tag_name }}
           echo "VERSION=${TAG#v}" >> $GITHUB_ENV
