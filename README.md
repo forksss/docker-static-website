@@ -1,5 +1,7 @@
 # docker-static-website
 
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/wcjiang/linux-command?logo=docker)](https://hub.docker.com/r/wcjiang/docker-static-website)
+
 A very small Docker image (~154KB) to run any static website, based on the [BusyBox httpd](https://www.busybox.net/) static file server.
 
 > If you're using the previous version (1.x, based on *thttpd*), I recommend upgrading since the new version (2.x) comes with a much smaller memory footprint.
