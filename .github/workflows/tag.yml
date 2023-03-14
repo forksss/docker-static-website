@@ -35,4 +35,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           tags: |
-            wcjiang/docker-static-website:${{ github.ref_name }}
+            wcjiang/docker-static-website:${{ github.ref_name#v }}
+            wcjiang/docker-static-website:latest
