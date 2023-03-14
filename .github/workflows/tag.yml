@@ -22,7 +22,8 @@ jobs:
       - run: |
           TAG=${{ github.event.release.tag_name }}
           echo "VERSION=${TAG#v}" >> $GITHUB_ENV
-
+  
+      - run: echo "${env.VERSION}"
       # Create Docker Image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
