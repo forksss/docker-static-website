@@ -9,8 +9,7 @@ jobs:
   create-docker-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-
+      - uses: actions/checkout@v4
       - name: Generate Changelog
         id: changelog
         uses: jaywcjlove/changelog-generator@main
@@ -21,25 +20,46 @@ jobs:
       - run: echo "${GITHUB_REF#refs/tags/v}"
       - run: |
           echo "CURRENT_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Set TAG
+        run: echo TAG=${GITHUB_REF#refs/tags/} >> $GITHUB_ENV
+          
       - name: Debug
         run: |
           cat $GITHUB_ENV
+          cat $TAG
   
       - run: echo "${{env.CURRENT_VERSION}}"
+      - run: echo "${{env.TAG}}"
+        
       # Create Docker Image
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        
+      - name: Login to Docker Registry
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push image:tags
+      # - name: Build and push image:tags
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     push: true
+      #     context: .
+      #     platforms: linux/amd64,linux/arm64
+      #     tags: |
+      #       wcjiang/docker-static-website:${{ env.CURRENT_VERSION }}
+        
+      - name: Publish ${{ matrix.svc }}
         uses: docker/build-push-action@v3
         with:
-          push: true
-          context: .
-          platforms: linux/amd64,linux/arm64
+          file: Dockerfile
+          outputs: "type=registry,push=true"
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: |
-            wcjiang/docker-static-website:${{ env.CURRENT_VERSION }}
+            wcjiang/docker-static-website:${{ env.TAG }}
+            wcjiang/docker-static-website:latest
