@@ -24,11 +24,6 @@ jobs:
       - name: Set TAG
         run: echo TAG=${GITHUB_REF#refs/tags/} >> $GITHUB_ENV
           
-      - name: Debug
-        run: |
-          cat $GITHUB_ENV
-          cat $TAG
-  
       - run: echo "${{env.CURRENT_VERSION}}"
       - run: echo "${{env.TAG}}"
         
