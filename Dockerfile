@@ -1,12 +1,16 @@
-FROM alpine:3.13.2 AS builder
+ARG ALPINE_VERSION=3.18.4
+
+FROM alpine:${ALPINE_VERSION} AS builder
+
+ARG BUSYBOX_VERSION=1.36.1
 
 # Install all dependencies required for compiling busybox
 RUN apk add gcc musl-dev make perl
 
 # Download busybox sources
-RUN wget https://busybox.net/downloads/busybox-1.35.0.tar.bz2 \
-  && tar xf busybox-1.35.0.tar.bz2 \
-  && mv /busybox-1.35.0 /busybox
+RUN wget https://busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2 \
+  && tar xf busybox-${BUSYBOX_VERSION}.tar.bz2 \
+  && mv /busybox-${BUSYBOX_VERSION} /busybox
 
 WORKDIR /busybox
 
@@ -14,7 +18,8 @@ WORKDIR /busybox
 COPY .config .
 
 # Compile and install busybox
-RUN make && make install
+# RUN make && make install
+RUN make && ./make_single_applets.sh
 
 # Create a non-root user to own the files and run our server
 RUN adduser -D static
@@ -28,7 +33,8 @@ EXPOSE 3000
 COPY --from=builder /etc/passwd /etc/passwd
 
 # Copy the busybox static binary
-COPY --from=builder /busybox/_install/bin/busybox /
+# Copy the static binary
+COPY --from=builder /busybox/busybox_HTTPD /busybox-httpd
 
 # Use our non-root user
 USER static
@@ -46,4 +52,4 @@ COPY httpd.conf .
 # COPY . .
 
 # Run busybox httpd
-CMD ["/busybox", "httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
+CMD ["/busybox-httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
