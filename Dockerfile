@@ -18,8 +18,8 @@ WORKDIR /busybox
 COPY .config .
 
 # Compile and install busybox
-# RUN make && make install
-RUN make && ./make_single_applets.sh
+RUN make && make install
+# RUN make && ./make_single_applets.sh
 
 # Create a non-root user to own the files and run our server
 RUN adduser -D static
