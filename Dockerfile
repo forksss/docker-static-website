@@ -34,7 +34,7 @@ COPY --from=builder /etc/passwd /etc/passwd
 
 # Copy the busybox static binary
 # Copy the static binary
-COPY --from=builder /busybox/busybox_HTTPD /busybox-httpd
+COPY --from=builder /busybox/_install/bin/busybox /
 
 # Use our non-root user
 USER static
@@ -52,4 +52,4 @@ COPY httpd.conf .
 # COPY . .
 
 # Run busybox httpd
-CMD ["/busybox-httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
+CMD ["/busybox", "httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
